@@ -1,5 +1,5 @@
 [phases.setup]
-nixPkgs = ['nodejs_18', 'python3', 'gcc', 'gnumake', 'pkg-config', 'openssl']
+nixPkgs = ['nodejs_20', 'python311', 'gcc', 'gnumake', 'pkg-config', 'openssl']
 
 [phases.install]
 cmds = ['npm ci']
