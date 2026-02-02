@@ -44,7 +44,7 @@ export function DashboardCharts({ expenseData, incomeData }: DashboardChartsProp
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
-                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                        label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                                         outerRadius={80}
                                         fill="#8884d8"
                                         dataKey="value"
@@ -53,7 +53,7 @@ export function DashboardCharts({ expenseData, incomeData }: DashboardChartsProp
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip formatter={(value: number) => formatIDR(value)} />
+                                    <Tooltip formatter={(value: number | undefined) => formatIDR(value || 0)} />
                                     <Legend />
                                 </PieChart>
                             </ResponsiveContainer>
@@ -82,7 +82,7 @@ export function DashboardCharts({ expenseData, incomeData }: DashboardChartsProp
                                         cx="50%"
                                         cy="50%"
                                         labelLine={false}
-                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                        label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                                         outerRadius={80}
                                         fill="#82ca9d"
                                         dataKey="value"
@@ -91,7 +91,7 @@ export function DashboardCharts({ expenseData, incomeData }: DashboardChartsProp
                                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                         ))}
                                     </Pie>
-                                    <Tooltip formatter={(value: number) => formatIDR(value)} />
+                                    <Tooltip formatter={(value: number | undefined) => formatIDR(value || 0)} />
                                     <Legend />
                                 </PieChart>
                             </ResponsiveContainer>
