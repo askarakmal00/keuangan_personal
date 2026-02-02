@@ -8,6 +8,9 @@ import { format } from "date-fns";
 import { Trash2, Wallet } from "lucide-react";
 import { revalidatePath } from "next/cache";
 
+export const revalidate = 0; // Force revalidation on every request
+export const dynamic = 'force-dynamic'; // Disable static rendering
+
 export default async function DebtsPage() {
     const debts = await getDebts();
     const summary = await getSummary();

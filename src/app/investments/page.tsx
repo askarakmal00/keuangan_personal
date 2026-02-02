@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { TrendingUp, TrendingDown, Trash2, Wallet } from "lucide-react";
 
+export const revalidate = 0; // Force revalidation on every request
+export const dynamic = 'force-dynamic'; // Disable static rendering
+
 export default async function InvestmentsPage() {
     const investments = await getInvestments();
     const summary = await getSummary();

@@ -12,6 +12,9 @@ import { Progress } from "@/components/ui/progress";
 import { format } from "date-fns";
 import { Target, Trash2, Calendar, Wallet } from "lucide-react";
 
+export const revalidate = 0; // Force revalidation on every request
+export const dynamic = 'force-dynamic'; // Disable static rendering
+
 export default async function GoalsPage() {
     const goals = await getGoals();
     const summary = await getSummary();
