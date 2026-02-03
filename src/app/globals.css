@@ -89,60 +89,60 @@
 }
 
 :root {
-  /* Custom earth-tone palette */
-  --background: 42 25% 96%;
-  --foreground: 99 39% 22%;
+  /* Clean minimal palette */
+  --background: 0 0% 98%;
+  --foreground: 0 0% 15%;
 
   --card: 0 0% 100%;
-  --card-foreground: 99 39% 22%;
+  --card-foreground: 0 0% 15%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 99 39% 22%;
+  --popover-foreground: 0 0% 15%;
 
-  /* Coral orange (#F5824A) for primary actions */
-  --primary: 15 91% 62%;
+  /* Teal/Cyan for primary */
+  --primary: 180 60% 50%;
   --primary-foreground: 0 0% 100%;
 
-  /* Dark green (#254F22) for secondary */
-  --secondary: 117 39% 22%;
-  --secondary-foreground: 0 0% 100%;
+  /* Gray for secondary */
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 15%;
 
-  --muted: 42 35% 92%;
-  --muted-foreground: 99 20% 45%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
 
-  /* Burnt orange (#A03A13) for accents */
-  --accent: 20 78% 35%;
+  /* Purple accent */
+  --accent: 260 60% 55%;
   --accent-foreground: 0 0% 100%;
 
-  --destructive: 0 84.2% 60.2%;
+  --destructive: 0 72% 51%;
   --destructive-foreground: 0 0% 100%;
 
-  --border: 42 25% 85%;
-  --input: 42 25% 90%;
-  --ring: 15 91% 62%;
-  --radius: 0.75rem;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 180 60% 50%;
+  --radius: 0.5rem;
 }
 
 .dark {
-  --background: 99 39% 8%;
-  --foreground: 42 50% 95%;
-  --card: 99 39% 12%;
-  --card-foreground: 42 50% 95%;
-  --popover: 99 39% 12%;
-  --popover-foreground: 42 50% 95%;
-  --primary: 15 85% 65%;
+  --background: 0 0% 10%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 12%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 12%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 180 60% 50%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 117 35% 30%;
-  --secondary-foreground: 0 0% 100%;
-  --muted: 99 25% 20%;
-  --muted-foreground: 42 30% 70%;
-  --accent: 20 70% 40%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 65%;
+  --accent: 260 60% 55%;
   --accent-foreground: 0 0% 100%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
-  --border: 99 25% 25%;
-  --input: 99 25% 25%;
-  --ring: 15 85% 65%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 180 60% 50%;
 }
 
 @layer base {
@@ -151,6 +151,6 @@
   }
 
   body {
-    @apply bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 text-foreground min-h-screen;
+    @apply bg-[#FAFAFA] text-foreground min-h-screen;
   }
 }
