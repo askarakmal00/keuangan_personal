@@ -7,7 +7,9 @@ let _db: ReturnType<typeof drizzle> | null = null;
 
 function getDb() {
     if (!_db) {
-        const sqlite = new Database("local.db");
+        // Support both local development and Railway with volume
+        const dbPath = process.env.DATABASE_PATH || "local.db";
+        const sqlite = new Database(dbPath);
         _db = drizzle(sqlite, { schema });
     }
     return _db;
