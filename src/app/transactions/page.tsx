@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { ArrowUpCircle, ArrowDownCircle, Trash2, Wallet } from "lucide-react";
 
+export const dynamic = 'force-dynamic'; // Disable static rendering
+
 export default async function TransactionsPage() {
     const transactions = await getTransactions();
     const summary = await getSummary();

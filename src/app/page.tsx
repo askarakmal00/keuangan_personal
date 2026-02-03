@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Wallet, ArrowDownCircle, ArrowUpCircle, TrendingUp, Target, CreditCard } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
+export const dynamic = 'force-dynamic'; // Disable static rendering
+
 export default async function Home() {
   const summary = await getSummary();
   const goals = await getGoals();
