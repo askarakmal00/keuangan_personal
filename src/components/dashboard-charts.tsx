@@ -56,7 +56,7 @@ export function DashboardCharts({ expenseChartData, incomeChartData }: Dashboard
                 <CardContent>
                     <div className="h-[400px] w-full">
                         {sortedExpenseData.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
                                 <BarChart
                                     data={sortedExpenseData}
                                     layout="vertical"
@@ -91,7 +91,7 @@ export function DashboardCharts({ expenseChartData, incomeChartData }: Dashboard
                 <CardContent>
                     <div className="h-[400px] w-full">
                         {sortedIncomeData.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
                                 <BarChart
                                     data={sortedIncomeData}
                                     layout="vertical"
