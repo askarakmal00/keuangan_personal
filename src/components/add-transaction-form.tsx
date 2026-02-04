@@ -1,62 +1,51 @@
 
 "use client";
 
-import { useTransition, useState } from "react";
-import { addTransaction } from "@/app/actions";
+import { useTransition, useState, useEffect } from "react";
+import { addTransaction, getCategories } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MoneyInput } from "@/components/ui/money-input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ManageCategoriesDialog } from "@/components/manage-categories-dialog";
 import { cn } from "@/lib/utils";
 import { ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 
-const INCOME_CATEGORIES = [
-    "Gaji",
-    "Bonus",
-    "Tunjangan",
-    "Penyesuaian Nilai",
-    "Dividen",
-    "Hadiah",
-    "Penjualan",
-    "Lainnya"
-];
-
-const EXPENSE_CATEGORIES = [
-    "Makanan",
-    "Kebutuhan Harian",
-    "Transportasi",
-    "Services Mobil",
-    "Listrik",
-    "Air",
-    "Internet",
-    "Subscription",
-    "Kesehatan",
-    "Kopi",
-    "Rokok",
-    "Hadiah",
-    "Tarik Tunai",
-    "Nafkah",
-    "Pendidikan",
-    "Cicilan",
-    "Hiburan",
-    "Penyesuaian",
-    "Lainnya"
-];
+interface Category {
+    id: number;
+    name: string;
+    type: "INCOME" | "EXPENSE";
+    icon: string | null;
+}
 
 export function AddTransactionForm() {
     const [isPending, startTransition] = useTransition();
     const [type, setType] = useState<"INCOME" | "EXPENSE">("EXPENSE");
+    const [categories, setCategories] = useState<Category[]>([]);
 
     // Simple form state
     const [amount, setAmount] = useState("");
-    const [category, setCategory] = useState(EXPENSE_CATEGORIES[0]);
+    const [category, setCategory] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
+    // Load categories on mount and when type changes
+    useEffect(() => {
+        loadCategories();
+    }, [type]);
+
+    async function loadCategories() {
+        const cats = await getCategories(type);
+        setCategories(cats as Category[]);
+        if (cats.length > 0 && !category) {
+            setCategory(cats[0].name);
+        }
+    }
+
     function handleTypeChange(newType: "INCOME" | "EXPENSE") {
         setType(newType);
-        setCategory(newType === "INCOME" ? INCOME_CATEGORIES[0] : EXPENSE_CATEGORIES[0]);
+        setCategory(""); // Reset category when type changes
     }
 
     async function handleSubmit(e: React.FormEvent) {
@@ -77,10 +66,15 @@ export function AddTransactionForm() {
         });
     }
 
+    const filteredCategories = categories.filter(cat => cat.type === type);
+
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Tambah Transaksi Baru</CardTitle>
+                <div className="flex items-center justify-between">
+                    <CardTitle>Tambah Transaksi Baru</CardTitle>
+                    <ManageCategoriesDialog />
+                </div>
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -125,10 +119,17 @@ export function AddTransactionForm() {
                             value={category}
                             onChange={(e) => setCategory(e.target.value)}
                             className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            required
                         >
-                            {(type === "INCOME" ? INCOME_CATEGORIES : EXPENSE_CATEGORIES).map((cat) => (
-                                <option key={cat} value={cat}>{cat}</option>
-                            ))}
+                            {filteredCategories.length === 0 ? (
+                                <option value="">Belum ada kategori</option>
+                            ) : (
+                                filteredCategories.map((cat) => (
+                                    <option key={cat.id} value={cat.name}>
+                                        {cat.icon ? `${cat.icon} ` : ""}{cat.name}
+                                    </option>
+                                ))
+                            )}
                         </select>
                     </div>
 

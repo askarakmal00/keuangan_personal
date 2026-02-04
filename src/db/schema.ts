@@ -53,3 +53,11 @@ export const goalBreakdowns = sqliteTable("goal_breakdowns", {
     amount: integer("amount").notNull(),
     createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
 });
+
+export const categories = sqliteTable("categories", {
+    id: integer("id").primaryKey({ autoIncrement: true }),
+    name: text("name").notNull().unique(),
+    type: text("type", { enum: ["INCOME", "EXPENSE"] }).notNull(),
+    icon: text("icon"),
+    createdAt: integer("created_at", { mode: "timestamp" }).default(sql`(CURRENT_TIMESTAMP)`),
+});

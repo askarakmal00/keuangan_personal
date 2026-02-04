@@ -2,7 +2,7 @@
 "use server";
 
 import { db } from "@/db";
-import { transactions, debts, investments, goals, goalBreakdowns } from "@/db/schema";
+import { transactions, debts, investments, goals, goalBreakdowns, categories } from "@/db/schema";
 import { revalidatePath } from "next/cache";
 import { desc, eq, sql } from "drizzle-orm";
 
@@ -407,6 +407,35 @@ export async function withdrawFromGoal(id: number, amount: number) {
     });
 
     revalidatePath("/goals");
+    revalidatePath("/");
+    revalidatePath("/transactions");
+}
+
+// --- CATEGORIES ---
+
+export async function getCategories(type?: "INCOME" | "EXPENSE") {
+    if (type) {
+        return await db.select().from(categories).where(eq(categories.type, type)).orderBy(categories.name);
+    }
+    return await db.select().from(categories).orderBy(categories.type, categories.name);
+}
+
+export async function addCategory(data: {
+    name: string;
+    type: "INCOME" | "EXPENSE";
+    icon?: string;
+}) {
+    await db.insert(categories).values({
+        name: data.name,
+        type: data.type,
+        icon: data.icon,
+    });
+    revalidatePath("/");
+    revalidatePath("/transactions");
+}
+
+export async function deleteCategory(id: number) {
+    await db.delete(categories).where(eq(categories.id, id));
     revalidatePath("/");
     revalidatePath("/transactions");
 }
