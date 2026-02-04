@@ -57,6 +57,32 @@ export async function bulkAddTransactions(data: Array<{
 }
 
 
+export async function updateTransaction(id: number, data: {
+    amount: number;
+    type: "INCOME" | "EXPENSE";
+    category: string;
+    description?: string;
+    date: Date;
+}) {
+    await db.update(transactions).set({
+        amount: data.amount,
+        type: data.type,
+        category: data.category,
+        description: data.description,
+        date: data.date,
+    }).where(eq(transactions.id, id));
+
+    revalidatePath("/");
+    revalidatePath("/transactions");
+}
+
+export async function getTransactionsByCategory(category: string) {
+    return await db.select().from(transactions)
+        .where(eq(transactions.category, category))
+        .orderBy(desc(transactions.date));
+}
+
+
 export async function getSummary() {
     const allTransactions = await db.select().from(transactions);
 

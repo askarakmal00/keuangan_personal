@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { CategoryDetailDialog } from "./category-detail-dialog";
+import { Button } from "./ui/button";
 
 interface ChartData {
     name: string;
@@ -18,6 +21,8 @@ const EXPENSE_COLORS = ['#F28482', '#F6BD60', '#F5CAC3', '#84A59D', '#D4A5A5', '
 const INCOME_COLORS = ['#84A59D', '#F6BD60', '#F5CAC3', '#9EC1B4', '#FFD4A3', '#C9ADA7', '#A4C3B2', '#F7D9C4'];
 
 export function DashboardCharts({ expenseChartData, incomeChartData }: DashboardChartsProps) {
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
     // Helper to format currency
     const formatIDR = (value: number) => {
         return new Intl.NumberFormat("id-ID", {
@@ -46,76 +51,125 @@ export function DashboardCharts({ expenseChartData, incomeChartData }: Dashboard
     };
 
     return (
-        <div className="grid gap-6 md:grid-cols-2">
-            {/* Expense Chart - Horizontal Bars */}
-            <Card className="bg-white border-gray-200 shadow-sm">
-                <CardHeader>
-                    <CardTitle>Pengeluaran per Kategori</CardTitle>
-                    <CardDescription>Distribusi pengeluaran Anda</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="h-[400px] w-full">
-                        {sortedExpenseData.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
-                                <BarChart
-                                    data={sortedExpenseData}
-                                    layout="vertical"
-                                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                                    <XAxis type="number" tick={{ fontSize: 12 }} tickFormatter={(value) => formatIDR(value)} />
-                                    <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 12 }} />
-                                    <Tooltip content={<CustomTooltip />} />
-                                    <Bar dataKey="value" radius={[0, 8, 8, 0]}>
-                                        {sortedExpenseData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={EXPENSE_COLORS[index % EXPENSE_COLORS.length]} />
-                                        ))}
-                                    </Bar>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-muted-foreground">
-                                Tidak ada data pengeluaran
-                            </div>
-                        )}
-                    </div>
-                </CardContent>
-            </Card>
+        <>
+            <div className="grid gap-6 md:grid-cols-2">
+                {/* Expense Chart - Horizontal Bars */}
+                <Card className="bg-white border-gray-200 shadow-sm">
+                    <CardHeader>
+                        <CardTitle>Pengeluaran per Kategori</CardTitle>
+                        <CardDescription>Distribusi pengeluaran Anda</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[400px] w-full">
+                            {sortedExpenseData.length > 0 ? (
+                                <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
+                                    <BarChart
+                                        data={sortedExpenseData}
+                                        layout="vertical"
+                                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                                    >
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                                        <XAxis type="number" tick={{ fontSize: 12 }} tickFormatter={(value) => formatIDR(value)} />
+                                        <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 12 }} />
+                                        <Tooltip content={<CustomTooltip />} />
+                                        <Bar dataKey="value" radius={[0, 8, 8, 0]}>
+                                            {sortedExpenseData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={EXPENSE_COLORS[index % EXPENSE_COLORS.length]} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-muted-foreground">
+                                    Tidak ada data pengeluaran
+                                </div>
+                            )}
+                        </div>
 
-            {/* Income Chart - Horizontal Bars */}
-            <Card className="bg-white border-gray-200 shadow-sm">
-                <CardHeader>
-                    <CardTitle>Pemasukan per Kategori</CardTitle>
-                    <CardDescription>Sumber pendapatan Anda</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="h-[400px] w-full">
-                        {sortedIncomeData.length > 0 ? (
-                            <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
-                                <BarChart
-                                    data={sortedIncomeData}
-                                    layout="vertical"
-                                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                                    <XAxis type="number" tick={{ fontSize: 12 }} tickFormatter={(value) => formatIDR(value)} />
-                                    <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 12 }} />
-                                    <Tooltip content={<CustomTooltip />} />
-                                    <Bar dataKey="value" radius={[0, 8, 8, 0]}>
-                                        {sortedIncomeData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={INCOME_COLORS[index % INCOME_COLORS.length]} />
-                                        ))}
-                                    </Bar>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-muted-foreground">
-                                Tidak ada data pemasukan
+                        {/* Clickable Category Chips */}
+                        {sortedExpenseData.length > 0 && (
+                            <div className="mt-4 flex flex-wrap gap-2">
+                                {sortedExpenseData.map((item, idx) => (
+                                    <Button
+                                        key={item.name}
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedCategory(item.name)}
+                                        className="text-xs"
+                                        style={{ borderColor: EXPENSE_COLORS[idx % EXPENSE_COLORS.length] }}
+                                    >
+                                        {item.name}
+                                    </Button>
+                                ))}
                             </div>
                         )}
-                    </div>
-                </CardContent>
-            </Card>
-        </div>
+                    </CardContent>
+                </Card>
+
+                {/* Income Chart - Horizontal Bars */}
+                <Card className="bg-white border-gray-200 shadow-sm">
+                    <CardHeader>
+                        <CardTitle>Pemasukan per Kategori</CardTitle>
+                        <CardDescription>Sumber pendapatan Anda</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="h-[400px] w-full">
+                            {sortedIncomeData.length > 0 ? (
+                                <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
+                                    <BarChart
+                                        data={sortedIncomeData}
+                                        layout="vertical"
+                                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                                    >
+                                        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                                        <XAxis type="number" tick={{ fontSize: 12 }} tickFormatter={(value) => formatIDR(value)} />
+                                        <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 12 }} />
+                                        <Tooltip content={<CustomTooltip />} />
+                                        <Bar dataKey="value" radius={[0, 8, 8, 0]}>
+                                            {sortedIncomeData.map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={INCOME_COLORS[index % INCOME_COLORS.length]} />
+                                            ))}
+                                        </Bar>
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            ) : (
+                                <div className="flex items-center justify-center h-full text-muted-foreground">
+                                    Tidak ada data pemasukan
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Clickable Category Chips */}
+                        {sortedIncomeData.length > 0 && (
+                            <div className="mt-4 flex flex-wrap gap-2">
+                                {sortedIncomeData.map((item, idx) => (
+                                    <Button
+                                        key={item.name}
+                                        variant="outline"
+                                        size="sm"
+                                        onClick={() => setSelectedCategory(item.name)}
+                                        className="text-xs"
+                                        style={{ borderColor: INCOME_COLORS[idx % INCOME_COLORS.length] }}
+                                    >
+                                        {item.name}
+                                    </Button>
+                                ))}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </div>
+
+            {/* Category Detail Dialog */}
+            {
+                selectedCategory && (
+                    <CategoryDetailDialog
+                        category={selectedCategory}
+                        isOpen={!!selectedCategory}
+                        onClose={() => setSelectedCategory(null)}
+                    />
+                )
+            }
+        </>
     );
 }
