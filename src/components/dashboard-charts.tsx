@@ -52,7 +52,7 @@ export function DashboardCharts({ expenseChartData, incomeChartData }: Dashboard
 
     return (
         <>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 grid-cols-1 xl:grid-cols-2">
                 {/* Expense Chart - Horizontal Bars */}
                 <Card className="bg-white border-gray-200 shadow-sm">
                     <CardHeader>
@@ -60,9 +60,9 @@ export function DashboardCharts({ expenseChartData, incomeChartData }: Dashboard
                         <CardDescription>Distribusi pengeluaran Anda</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="h-[400px] w-full">
+                        <div className="h-[300px] sm:h-[400px] w-full">
                             {sortedExpenseData.length > 0 ? (
-                                <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
+                                <ResponsiveContainer width="100%" height="100%" minHeight={250}>
                                     <BarChart
                                         data={sortedExpenseData}
                                         layout="vertical"
@@ -88,7 +88,7 @@ export function DashboardCharts({ expenseChartData, incomeChartData }: Dashboard
 
                         {/* Clickable Category Chips */}
                         {sortedExpenseData.length > 0 && (
-                            <div className="mt-4 flex flex-wrap gap-2">
+                            <div className="mt-4 flex flex-wrap gap-1.5 sm:gap-2">
                                 {sortedExpenseData.map((item, idx) => (
                                     <Button
                                         key={item.name}
@@ -113,9 +113,9 @@ export function DashboardCharts({ expenseChartData, incomeChartData }: Dashboard
                         <CardDescription>Sumber pendapatan Anda</CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <div className="h-[400px] w-full">
+                        <div className="h-[300px] sm:h-[400px] w-full">
                             {sortedIncomeData.length > 0 ? (
-                                <ResponsiveContainer width="100%" height="100%" minHeight={300} aspect={1.5}>
+                                <ResponsiveContainer width="100%" height="100%" minHeight={250}>
                                     <BarChart
                                         data={sortedIncomeData}
                                         layout="vertical"
@@ -141,7 +141,7 @@ export function DashboardCharts({ expenseChartData, incomeChartData }: Dashboard
 
                         {/* Clickable Category Chips */}
                         {sortedIncomeData.length > 0 && (
-                            <div className="mt-4 flex flex-wrap gap-2">
+                            <div className="mt-4 flex flex-wrap gap-1.5 sm:gap-2">
                                 {sortedIncomeData.map((item, idx) => (
                                     <Button
                                         key={item.name}

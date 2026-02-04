@@ -45,12 +45,12 @@ export default async function TransactionsPage() {
                 </CardContent>
             </Card>
 
-            <div className="grid gap-6 md:grid-cols-2">
-                <div>
+            <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
+                <div className="order-2 lg:order-1">
                     <AddTransactionForm />
                 </div>
 
-                <Card>
+                <Card className="order-1 lg:order-2">
                     <CardHeader>
                         <CardTitle>Riwayat Transaksi</CardTitle>
                     </CardHeader>

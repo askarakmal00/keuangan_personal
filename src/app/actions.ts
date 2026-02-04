@@ -157,9 +157,25 @@ export async function addDebt(data: {
 }
 
 export async function toggleDebtStatus(id: number, currentStatus: boolean) {
+    // Get debt details to check type and amount
+    const [debt] = await db.select().from(debts).where(eq(debts.id, id)).limit(1);
+
+    // If marking as paid (currentStatus is false, will become true)
+    // AND it's a RECEIVABLE, create income transaction
+    if (!currentStatus && debt && debt.type === 'RECEIVABLE') {
+        await db.insert(transactions).values({
+            type: 'INCOME',
+            category: 'Piutang Lunas',
+            amount: debt.amount,
+            description: `Piutang dari ${debt.name}`,
+            date: new Date(),
+        });
+    }
+
     await db.update(debts).set({ isPaid: !currentStatus }).where(eq(debts.id, id));
     revalidatePath("/debts");
     revalidatePath("/");
+    revalidatePath("/transactions");
 }
 
 export async function payDebtFromAccount(id: number, paymentAmount?: number) {
