@@ -31,7 +31,15 @@ export async function seedCategories() {
         { name: "Lainnya", type: "EXPENSE" as const, icon: "💸" },
     ];
 
-    await db.insert(categories).values(defaultCategories);
-
-    console.log(`✅ Seeded ${defaultCategories.length} default categories`);
+    try {
+        await db.insert(categories).values(defaultCategories);
+        console.log(`✅ Seeded ${defaultCategories.length} default categories`);
+    } catch (error: any) {
+        // Handle case where categories already exist (UNIQUE constraint)
+        if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+            console.log("📦 Categories already exist, skipping seed...");
+        } else {
+            throw error;
+        }
+    }
 }
