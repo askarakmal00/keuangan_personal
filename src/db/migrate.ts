@@ -5,28 +5,31 @@ import { seedCategories } from "./seed-categories";
 import path from "path";
 import fs from "fs";
 
-// Get database path from environment or use default
-const dbPath = process.env.DATABASE_PATH || "local.db";
+// Wrap in async IIFE to avoid top-level await error
+(async () => {
+    // Get database path from environment or use default
+    const dbPath = process.env.DATABASE_PATH || "local.db";
 
-// Ensure directory exists
-const dbDir = path.dirname(dbPath);
-if (!fs.existsSync(dbDir) && dbDir !== ".") {
-    fs.mkdirSync(dbDir, { recursive: true });
-}
+    // Ensure directory exists
+    const dbDir = path.dirname(dbPath);
+    if (!fs.existsSync(dbDir) && dbDir !== ".") {
+        fs.mkdirSync(dbDir, { recursive: true });
+    }
 
-console.log(`🗄️  Database path: ${dbPath}`);
+    console.log(`🗄️  Database path: ${dbPath}`);
 
-// Create or open database
-const sqlite = new Database(dbPath);
-const db = drizzle(sqlite);
+    // Create or open database
+    const sqlite = new Database(dbPath);
+    const db = drizzle(sqlite);
 
-// Run migrations
-console.log("🔄 Running migrations...");
-migrate(db, { migrationsFolder: "./drizzle" });
-console.log("✅ Migrations completed successfully");
+    // Run migrations
+    console.log("🔄 Running migrations...");
+    migrate(db, { migrationsFolder: "./drizzle" });
+    console.log("✅ Migrations completed successfully");
 
-// Seed categories
-await seedCategories();
+    // Seed categories
+    await seedCategories();
 
-// Close database
-sqlite.close();
+    // Close database
+    sqlite.close();
+})();
