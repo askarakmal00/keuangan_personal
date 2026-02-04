@@ -1,6 +1,7 @@
 
 import { getTransactions, deleteTransaction, getSummary } from "@/app/actions";
 import { AddTransactionForm } from "@/components/add-transaction-form";
+import { BulkUploadDialog } from "@/components/bulk-upload-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
@@ -25,6 +26,7 @@ export default async function TransactionsPage() {
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-3xl font-bold tracking-tight">Transaksi</h1>
+                <BulkUploadDialog />
             </div>
 
             {/* Balance Display */}

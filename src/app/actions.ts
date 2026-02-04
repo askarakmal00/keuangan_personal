@@ -30,6 +30,33 @@ export async function getTransactions() {
     return await db.select().from(transactions).orderBy(desc(transactions.createdAt));
 }
 
+export async function bulkAddTransactions(data: Array<{
+    date: string;
+    type: "INCOME" | "EXPENSE";
+    category: string;
+    amount: number;
+    description?: string;
+}>) {
+    if (data.length === 0) {
+        throw new Error("No transactions to import");
+    }
+
+    // Convert and insert all transactions
+    const transactionsToInsert = data.map(item => ({
+        amount: item.amount,
+        type: item.type,
+        category: item.category,
+        description: item.description,
+        date: new Date(item.date),
+    }));
+
+    await db.insert(transactions).values(transactionsToInsert);
+
+    revalidatePath("/");
+    revalidatePath("/transactions");
+}
+
+
 export async function getSummary() {
     const allTransactions = await db.select().from(transactions);
 
